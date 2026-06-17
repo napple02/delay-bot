@@ -2,9 +2,10 @@ name: 遅延情報をDiscord通知
 
 on:
   schedule:
-    # GitHub Actions の cron は UTC。JST = UTC+9。
-    - cron: '50 20 * * *' # 5:50 JST（前日20:50 UTC）
-    - cron: '50 21 * * *' # 6:50 JST（前日21:50 UTC）
+    # GitHub Actions の cron は UTC（JST = UTC+9）。かつ実行はキュー混雑で数分遅延しうる。
+    # そのため目標時刻（5:50 / 6:50 JST）の10分前に起動し、遅延を吸収して時刻までに通知する。
+    - cron: '40 20 * * *' # 5:40 JST起動（前日20:40 UTC）→ 5:50までに通知
+    - cron: '40 21 * * *' # 6:40 JST起動（前日21:40 UTC）→ 6:50までに通知
   workflow_dispatch: {} # 手動実行用
 
 jobs:
@@ -14,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
       - run: node notify.js
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
