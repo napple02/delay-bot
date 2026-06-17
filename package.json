@@ -1,0 +1,13 @@
+{
+  "name": "delay-bot",
+  "version": "1.0.0",
+  "description": "指定路線の遅延情報を通知するAlexaカスタムスキル",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "ask-sdk-core": "^2.14.0"
+  }
+}
