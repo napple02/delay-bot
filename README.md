@@ -14,11 +14,33 @@
 | 遅延なし | 現在、田園都市線、半蔵門線、小田急線はすべて平常運転です。いってらっしゃいませ。 |
 | 取得失敗 | すみません、遅延情報の取得に失敗しました。 |
 
+## Discord通知（GitHub Actions）
+
+毎朝5:50と6:50に、同じ4路線の遅延情報を自動でDiscordへテキスト通知する。Alexaやローカル端末の電源は不要。
+
+### セットアップ
+
+1. Discordサーバーの対象チャンネル → 連携 → ウェブフック → 新規ウェブフックを作成し、URLをコピー。
+2. GitHubリポジトリ Settings → Secrets and variables → Actions → New repository secret で、名前 `DISCORD_WEBHOOK_URL` として上記URLを登録。
+
+### スケジュール
+
+GitHub Actions の cron は **UTC**（JST = UTC+9）。`.github/workflows/notify.yml` で2本設定。
+
+| JST | UTC（cron） |
+|---|---|
+| 5:50 | `50 20 * * *` |
+| 6:50 | `50 21 * * *` |
+
+> ⚠️ GitHub Actions の cron は混雑時に数分遅延することがある。Actionsタブから `workflow_dispatch` で手動実行も可能。
+
 ## 構成
 
 | ファイル | 内容 |
 |---|---|
 | `index.js` | Lambdaエントリーポイント（`https` で遅延情報取得・判定） |
+| `notify.js` | Discord通知スクリプト（遅延情報取得・判定後にWebhookへPOST、Node標準 `https` のみ） |
+| `.github/workflows/notify.yml` | 毎朝5:50/6:50に `notify.js` を実行するワークフロー |
 | `interactionModels/custom/ja-JP.json` | 対話モデル（呼び出し名「通勤路線」） |
 
 ## 技術スタック
