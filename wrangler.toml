@@ -1,0 +1,9 @@
+name = "delay-bot"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[triggers]
+# JST = UTC+9。平日（UTC日〜木 = JST月〜金）の朝に実行。
+# 5:50 JST = 20:50 UTC（前日）
+# 6:40 JST = 21:40 UTC（前日）— 出発10分前
+crons = ["50 20 * * SUN-THU", "40 21 * * SUN-THU"]

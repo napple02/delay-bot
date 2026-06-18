@@ -13,6 +13,9 @@ logs/
 *.log
 npm-debug.log*
 
+# Cloudflare Workers ローカルキャッシュ
+.wrangler/
+
 # OS生成物
 .DS_Store
 Thumbs.db

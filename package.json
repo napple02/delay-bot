@@ -9,5 +9,8 @@
   "license": "MIT",
   "dependencies": {
     "ask-sdk-core": "^2.14.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.101.0"
   }
 }

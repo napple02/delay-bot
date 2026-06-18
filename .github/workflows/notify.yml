@@ -1,13 +1,8 @@
 name: 遅延情報をDiscord通知
 
 on:
-  schedule:
-    # GitHub Actions の cron は UTC（JST = UTC+9）。かつ実行はキュー混雑で数分遅延しうる。
-    # そのため目標時刻（5:50 / 6:50 JST）の10分前に起動し、遅延を吸収して時刻までに通知する。
-    # 平日(JST月〜金)の朝 = UTC日〜木(DOW 0-4)に限定。祝日はnotify.js側でスキップ。
-    - cron: '40 20 * * 0-4' # 5:40 JST起動（前日20:40 UTC）→ 5:50までに通知
-    - cron: '40 21 * * 0-4' # 6:40 JST起動（前日21:40 UTC）→ 6:50までに通知
-  workflow_dispatch: {} # 手動実行用
+  # cron は Cloudflare Workers へ移行済み。このワークフローは手動テスト用のみ残す。
+  workflow_dispatch: {}
 
 jobs:
   notify:
