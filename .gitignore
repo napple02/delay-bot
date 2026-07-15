@@ -16,6 +16,9 @@ npm-debug.log*
 # Cloudflare Workers ローカルキャッシュ
 .wrangler/
 
+# ローカルAI開発設定
+.claude/
+
 # OS生成物
 .DS_Store
 Thumbs.db
