@@ -70,12 +70,17 @@ npx wrangler tail
 | ファイル | 内容 |
 |---|---|
 | `lib/delay.js` | 共有モジュール（監視路線定義・リトライ付き取得・`troubleRails` 判定） |
+| `lib/notify.js` | 共有モジュール（祝日判定・ODPTフォールバック・Discord Embed生成・送信。`worker.js`/`notify.js` 両方から利用） |
+| `lib/notify.test.js` | `lib/notify.js` のユニットテスト（`node --test`） |
 | `index.js` | Alexa Lambdaエントリーポイント（`lib/delay.js` を利用） |
-| `notify.js` | Discord通知スクリプト・Node.js版（`lib/delay.js` を利用。Cloudflare Workers 移行済みのため通常は未使用） |
-| `worker.js` | Cloudflare Workers エントリーポイント（Discord定時通知・cron実行） |
+| `notify.js` | Discord通知スクリプト・Node.js版（`lib/notify.js` を利用。手動テスト用） |
+| `worker.js` | Cloudflare Workers エントリーポイント（`lib/notify.js` を利用。Discord定時通知・cron実行） |
 | `wrangler.toml` | Cloudflare Workers 設定（cronスケジュール定義） |
-| `.github/workflows/notify.yml` | 手動テスト用ワークフロー（`workflow_dispatch` のみ） |
+| `.github/workflows/test.yml` | push/PR時にユニットテストを実行するCI |
+| `.github/workflows/notify.yml` | 手動テスト用ワークフロー（`workflow_dispatch` のみ、テスト実行後に実通知） |
 | `interactionModels/custom/ja-JP.json` | 対話モデル（呼び出し名「通勤路線」） |
+
+`worker.js`・`notify.js`はどちらも薄いエントリーポイントで、通知フロー（祝日判定→Yahoo取得→Discord送信、失敗時はODPTフォールバック）の実体は`lib/notify.js`の`notify()`関数に一本化している（以前は両ファイルにほぼ同一のロジックが重複していた）。Node.js 18+ とCloudflare Workersはどちらも標準`fetch`を持つため、`https`モジュールへの依存をやめてランタイム間で共用できるようにした。
 
 ## 技術スタック
 
